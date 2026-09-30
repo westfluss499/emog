@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>絵文字を追加 | 絵文字工房</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>絵文字を追加</h1>
+
+    <div class="nav-link">
+        <a href="index.html">← 一覧に戻る</a>
+    </div>
+
+    <div class="form-card">
+        <form id="addForm">
+            <div class="form-group">
+                <label for="emojiInput">登録したい顔文字・絵文字</label>
+                <input
+                    type="text"
+                    id="emojiInput"
+                    name="emoji_text"
+                    placeholder="例: ( ・ω・ )"
+                    maxlength="255"
+                    autocomplete="off"
+                    required
+                >
+            </div>
+            <button type="submit" class="submit-btn" id="submitBtn">登録する</button>
+            <p class="form-message" id="formMessage"></p>
+        </form>
+    </div>
+
+    <script src="emoji-store.js"></script>
+    <script>
+        const addForm = document.getElementById('addForm');
+        const emojiInput = document.getElementById('emojiInput');
+        const formMessage = document.getElementById('formMessage');
+
+        addForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            formMessage.textContent = '';
+            formMessage.classList.remove('success', 'error');
+
+            try {
+                const item = EmojiStore.add(emojiInput.value);
+
+                formMessage.textContent = `「${item.emoji_text}」を登録しました！`;
+                formMessage.classList.add('success');
+                emojiInput.value = '';
+                emojiInput.focus();
+            } catch (err) {
+                console.error(err);
+                formMessage.textContent = err.message || '登録に失敗しました。';
+                formMessage.classList.add('error');
+            }
+        });
+    </script>
+</body>
+</html>

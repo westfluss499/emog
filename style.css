@@ -1,0 +1,255 @@
+:root {
+    --primary-color: #474747;
+    --bg-color: #f5f7f9;
+    --card-bg: #ffffff;
+    --text-color: #333;
+    --accent-color: #50c878;
+    --danger-color: #e25c5c;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    margin-bottom: 10px;
+    font-weight: 300;
+    color: var(--primary-color);
+}
+
+.nav-link {
+    margin-bottom: 30px;
+}
+
+.nav-link a {
+    display: inline-block;
+    text-decoration: none;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-link a:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.status-message {
+    color: #888;
+    margin-bottom: 20px;
+}
+
+.status-message.error {
+    color: var(--danger-color);
+}
+
+.search-box {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+}
+
+.search-box input[type="text"] {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 24px;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: var(--card-bg);
+}
+
+.search-box input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1000px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.grid-item {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid #eee;
+    position: relative;
+}
+
+.grid-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.emoji-text {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    word-break: break-all;
+}
+
+.copy-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    outline: none;
+}
+
+.copy-btn:hover {
+    background-color: #1e1e1e;
+}
+
+.copy-btn.success {
+    background-color: var(--accent-color);
+}
+
+.button-row {
+    display: flex;
+    gap: 8px;
+}
+
+.button-row .copy-btn {
+    flex: 1;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--danger-color);
+    color: #fff;
+    font-size: 0.95rem;
+    line-height: 1;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, transform 0.2s;
+    outline: none;
+}
+
+.delete-btn:hover {
+    background-color: #c84545;
+    transform: scale(1.1);
+}
+
+/* ---- 追加ページ用 ---- */
+
+.form-card {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 32px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+    box-sizing: border-box;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.form-group input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.submit-btn {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+    background-color: #357abd;
+}
+
+.submit-btn:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+.form-message {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 0.95rem;
+    min-height: 1.2em;
+}
+
+.form-message.success {
+    color: var(--accent-color);
+}
+
+.form-message.error {
+    color: var(--danger-color);
+}
+
+@media (max-width: 480px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+}

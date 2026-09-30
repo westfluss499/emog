@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>絵文字工房</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>絵文字工房</h1>
+
+    <div class="nav-link">
+        <a href="add.html">＋ 絵文字を追加する</a>
+        <a href="#" id="resetLink" style="margin-left: 8px;">初期状態に戻す</a>
+    </div>
+
+    <div class="search-box">
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="🔍 絵文字を検索..."
+            autocomplete="off"
+        >
+    </div>
+
+    <p class="status-message" id="statusMessage">読み込み中...</p>
+    <p class="status-message" id="noResultsMessage" style="display:none;">該当する絵文字が見つかりませんでした。</p>
+
+    <ul class="grid-container" id="emojiGrid"></ul>
+
+    <script src="emoji-store.js"></script>
+    <script>
+        const gridContainer = document.getElementById('emojiGrid');
+        const statusMessage = document.getElementById('statusMessage');
+        const noResultsMessage = document.getElementById('noResultsMessage');
+        const searchInput = document.getElementById('searchInput');
+        const resetLink = document.getElementById('resetLink');
+
+        let allEmojis = []; // 取得した全件をメモリに保持し、検索時はここをフィルタする
+
+        const EMPTY_MESSAGE = 'まだ絵文字が登録されていません。「＋ 絵文字を追加する」から登録してみましょう。';
+
+        // ページを開いたら localStorage から絵文字一覧を取得する
+        function loadEmojis() {
+            try {
+                allEmojis = EmojiStore.getAll();
+                applyFilter();
+
+                if (allEmojis.length === 0) {
+                    statusMessage.textContent = EMPTY_MESSAGE;
+                    statusMessage.classList.remove('error');
+                    statusMessage.style.display = 'block';
+                } else {
+                    statusMessage.style.display = 'none';
+                }
+            } catch (err) {
+                console.error(err);
+                statusMessage.textContent = err.message || 'データの取得に失敗しました。';
+                statusMessage.classList.add('error');
+                statusMessage.style.display = 'block';
+            }
+        }
+
+        function renderEmojis(emojis) {
+            gridContainer.innerHTML = '';
+
+            emojis.forEach((item) => {
+                const li = document.createElement('li');
+                li.className = 'grid-item';
+                li.dataset.id = item.id;
+
+                const div = document.createElement('div');
+                div.className = 'emoji-text';
+                div.textContent = item.emoji_text;
+
+                const buttonRow = document.createElement('div');
+                buttonRow.className = 'button-row';
+
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-btn';
+                copyBtn.textContent = 'コピーする';
+                copyBtn.dataset.emoji = item.emoji_text;
+                copyBtn.addEventListener('click', function() {
+                    copyText(this, this.dataset.emoji);
+                });
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = '×';
+                deleteBtn.setAttribute('aria-label', '削除');
+                deleteBtn.setAttribute('title', '削除');
+                deleteBtn.addEventListener('click', function() {
+                    deleteEmoji(item.id);
+                });
+
+                buttonRow.appendChild(copyBtn);
+
+                li.appendChild(deleteBtn);
+                li.appendChild(div);
+                li.appendChild(buttonRow);
+                gridContainer.appendChild(li);
+            });
+
+            noResultsMessage.style.display = (emojis.length === 0 && allEmojis.length > 0) ? 'block' : 'none';
+        }
+
+        async function copyText(btn, text) {
+            try {
+                await navigator.clipboard.writeText(text);
+
+                const originalText = btn.innerText;
+                btn.innerText = "コピー完了！";
+                btn.classList.add('success');
+
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.classList.remove('success');
+                }, 1500);
+
+            } catch (err) {
+                console.error('コピーに失敗しました', err);
+            }
+        }
+
+        function deleteEmoji(id) {
+            const target = allEmojis.find((e) => e.id === id);
+            const label = target ? target.emoji_text : 'この絵文字';
+
+            if (!window.confirm(`「${label}」を削除します。よろしいですか？`)) {
+                return;
+            }
+
+            try {
+                if (!EmojiStore.remove(id)) {
+                    throw new Error('指定された絵文字は見つかりませんでした（すでに削除されている可能性があります）。');
+                }
+            } catch (err) {
+                console.error(err);
+                alert(err.message || '削除に失敗しました。');
+            }
+
+            loadEmojis(); // 保存内容を読み直して再描画
+        }
+
+        // 検索キーワードで allEmojis を絞り込んで表示する
+        function applyFilter() {
+            const keyword = searchInput.value.trim().toLowerCase();
+
+            if (keyword === '') {
+                renderEmojis(allEmojis);
+                return;
+            }
+
+            renderEmojis(allEmojis.filter((item) =>
+                item.emoji_text.toLowerCase().includes(keyword)
+            ));
+        }
+
+        searchInput.addEventListener('input', applyFilter);
+
+        resetLink.addEventListener('click', function (event) {
+            event.preventDefault();
+            if (!window.confirm('登録済みのデータをすべて削除し、初期状態の17個に戻します。よろしいですか？')) {
+                return;
+            }
+            try {
+                EmojiStore.reset();
+            } catch (err) {
+                alert(err.message);
+                return;
+            }
+            searchInput.value = '';
+            loadEmojis();
+        });
+
+        loadEmojis();
+    </script>
+</body>
+</html>
