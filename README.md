@@ -1,4 +1,4 @@
-# 絵文字工房（localStorage版）
+# localStorage版
 
 SQLite + PHP で保存していた絵文字を、**ブラウザの localStorage** に保存する方式に変更しました。
 サーバー側の処理（PHP・データベース）は一切不要で、HTMLファイルだけで動きます。
