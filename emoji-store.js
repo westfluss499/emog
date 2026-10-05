@@ -8,6 +8,9 @@
 const EmojiStore = (() => {
     const STORAGE_KEY = 'emojiFactory.v1';
 
+    const INITIAL_EMOJI_LIST = [
+    ];
+
     function createInitialData() {
         const now = new Date().toISOString();
         const items = INITIAL_EMOJI_LIST.map((text, i) => ({
